@@ -15,7 +15,11 @@
       <b-navbar-item tag="div">
         <div class="buttons">
           <a v-for="(button, id) in navButtons" :key="id" :class="button.type">
-            <strong>{{ button.name }}</strong>
+            <strong>
+              <router-link :to="button.link" class="xyz">
+                {{ button.name }}</router-link
+              ></strong
+            >
           </a>
           <b-field>
             <b-switch
@@ -23,6 +27,7 @@
               v-model="lightMode"
               passive-type="is-dark "
               type="is-warning"
+              v-on:input="change"
             >
               {{ lightMode ? "Light" : "Dark" }}
             </b-switch>
@@ -58,16 +63,27 @@ export default {
       navButtons: [
         {
           name: "Login",
-          link: "",
-          type: "button is-primary",
+          link: "/login",
+          type: "button is-primary ",
         },
         {
           name: "SingUp",
-          link: "",
+          link: "/singup",
           type: "button is-light",
         },
       ],
     };
   },
+  methods: {
+    change() {
+      console.log("Chnaged ");
+    },
+  },
 };
 </script>
+
+<style >
+.xyz {
+  color: black;
+}
+</style>

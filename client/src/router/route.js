@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../components/Main.vue";
-import Login from "../components/Login.vue";
-import Singup from "../components/Singup.vue";
+import Login from "../components/auth/Login.vue";
+import Singup from "../components/auth/Singup.vue";
 Vue.use(VueRouter);
 const routes = [
   {

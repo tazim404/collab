@@ -32,7 +32,7 @@ export default {
       cta: "Be the part",
       ctaLink: "",
       ctaType: "button is-success is-outlined is-medium",
-      imageUrl: require("../assets/about.svg"),
+      imageUrl: require("../../assets/about.svg"),
     };
   },
 };

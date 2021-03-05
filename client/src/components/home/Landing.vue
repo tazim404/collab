@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-  name: "Home",
+  name: "Landing",
   data() {
     return {
       title: "Collab Playback",
@@ -31,7 +31,7 @@ export default {
       cta: "Be the part",
       ctaLink: "",
       ctaType: "button is-success is-outlined is-medium",
-      imageUrl: require("../assets/home.svg"),
+      imageUrl: require("../../assets/home.svg"),
     };
   },
 };

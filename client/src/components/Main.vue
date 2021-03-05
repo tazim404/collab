@@ -1,21 +1,21 @@
 <template>
   <div>
-    <Home />
+    <Landing />
     <About />
     <Team />
   </div>
 </template>
 
 <script>
-import Home from "./Home.vue";
-import About from "./About.vue";
-import Team from "./Team.vue";
+import About from "./home/About.vue";
+import Team from "./home/Team.vue";
+import Landing from "./home/Landing.vue";
 export default {
   name: "Main",
   components: {
-    Home,
     About,
     Team,
+    Landing,
   },
 };
 </script>
