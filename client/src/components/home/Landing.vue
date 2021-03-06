@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="home">
     <div class="columns is-gapless">
       <div class="column">
         <section class="hero is-medium">

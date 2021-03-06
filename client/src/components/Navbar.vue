@@ -2,17 +2,22 @@
   <b-navbar fixed-top type="is-success" mobile-burger-false>
     <template #brand>
       <b-navbar-item>
-        <img src="../assets/logo.png" alt="Brand Logo" />
+        <a href="/">
+          <img src="../assets/logo.png" alt="Brand Logo" />
+        </a>
       </b-navbar-item>
     </template>
     <template #start>
+      <!-- Nav Items -->
+
       <b-navbar-item href="#" v-for="(item, id) in navItems" :key="id">
-        {{ item.name }}
+        <a :href="item.link" class="nav-links"> {{ item.name }}</a>
       </b-navbar-item>
     </template>
 
     <template #end>
       <b-navbar-item tag="div">
+        <!-- Buttons gropup -->
         <div class="buttons">
           <a v-for="(button, id) in navButtons" :key="id" :class="button.type">
             <strong>
@@ -49,15 +54,15 @@ export default {
       navItems: [
         {
           name: "Home",
-          link: "",
+          link: "/#home",
         },
         {
           name: "About",
-          link: "",
+          link: "/#about",
         },
         {
           name: "Developers",
-          link: "",
+          link: "/#teams",
         },
       ],
       navButtons: [
@@ -85,5 +90,9 @@ export default {
 <style >
 .xyz {
   color: black;
+}
+.nav-links {
+  color: black;
+  font-size: 1.5em;
 }
 </style>

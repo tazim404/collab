@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div id="teams" class="box">
     <!-- <Divider color="red" size="is-4" width="50%" title="Developers" /> -->
     <hr color="#fc0000" width="100%" height="100%" />
     <h1 class="title is-2 has-text-centered">Developers</h1>
@@ -54,13 +54,27 @@
                       </b-icon>
                     </span>
                   </a>
-                  <a class="level-item" v-if="team.facebook">
+                  <a
+                    class="level-item"
+                    v-if="team.facebook"
+                    :href="team.facebook"
+                  >
                     <span class="icon is-medium">
                       <b-icon
                         pack="fab"
                         icon="fab fa-facebook"
                         size="is-medium"
                       >
+                      </b-icon>
+                    </span>
+                  </a>
+                  <a
+                    class="level-item"
+                    v-if="team.website"
+                    :href="team.website"
+                  >
+                    <span class="icon is-medium">
+                      <b-icon pack="fa" icon="fab fa-globe" size="is-medium">
                       </b-icon>
                     </span>
                   </a>
@@ -89,15 +103,17 @@ export default {
           instagram: "https://instgram.com/tazim_rahbar",
           twitter: "https://twitter.com/tazim_rahbar",
           facebook: "",
+          website: "https://tazim.netlify.app",
         },
         {
-          name: "??",
+          name: "?",
           designation: "?",
           image: "https://bulma.io/images/placeholders/128x128.png",
           github: "?",
           instagram: "?",
           twitter: "?",
           facebook: "?",
+          website: "?",
         },
       ],
     };

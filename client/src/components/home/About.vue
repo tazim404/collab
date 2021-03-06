@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="about">
     <hr />
     <div class="columns">
       <div class="column">
