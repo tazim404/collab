@@ -3,7 +3,23 @@ import VueRouter from "vue-router";
 import Main from "../components/Main.vue";
 import Login from "../components/auth/Login.vue";
 import Singup from "../components/auth/Singup.vue";
+import Profile from "../components/admin/Profile.vue";
+import Create from "../components/admin/Create.vue";
 Vue.use(VueRouter);
+function guardMyroute(to, from, next) {
+  let isAuthenticated = false;
+  if (localStorage.getItem("token")) {
+    isAuthenticated = true;
+  } else {
+    isAuthenticated = false;
+  }
+
+  if (isAuthenticated) {
+    next();
+  } else {
+    next("/login");
+  }
+}
 const routes = [
   {
     path: "/",
@@ -19,6 +35,17 @@ const routes = [
     path: "/singup",
     name: "singup",
     component: Singup,
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: Profile,
+    beforeEnter: guardMyroute,
+  },
+  {
+    path: "/create",
+    name: "create",
+    component: Create,
   },
 ];
 

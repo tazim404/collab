@@ -46,7 +46,7 @@ def token_required(f):
 
 
 # Singup Route
-@app.route('/singup')
+@app.route('/singup',methods=["POST"])
 def singup():
     data=request.get_json()
     try:
@@ -64,7 +64,7 @@ def singup():
     except Exception:
         return jsonify({"Problem in creating user,I think you should try diffrent username"})
     
-@app.route('/login')
+@app.route('/login',methods=["POST"])
 def login():
     data=request.get_json()
     if not data or not data['username'] or not data['password']:
@@ -79,10 +79,58 @@ def login():
         return jsonify({'message':"Wrong credentials"})
 
 
-@app.route('/create')
+@app.route('/create',methods=["POST"])
 @token_required
 def create_room(current_user):
+    # Accept room_name,video_link
     data=request.get_json()
     user=Users.query.filter_by(public_id=current_user.public_id).first()
+    unique_id=uuid.uuid4().hex[0:6]
     # Create a room
-    # room=Rooms(room_name=data['room_name'],video_link=data['video_link'],room_id='')
+    room=Rooms(room_name=data['room_name'],video_link=data['video_link'],room_id=unique_id,created_by=current_user.public_id)
+    db.session.add(room)
+    db.session.commit()
+    return jsonify({"message":"New room craeted"})
+
+@app.route('/delete',methods=["POST"])
+@token_required
+def delete_room(current_user):
+    # Accepts:room_id,user_id
+    try:
+        data=request.get_json()
+        room=Rooms.query.filter_by(room_id=data['room_id']).first()
+        if room.created_by==current_user.public_id:
+            db.session.delete(room)
+            db.session.commit()
+            return jsonify({'message':"Deleted the room"})
+        else:
+            return jsonify({'message':"YOu are not the creator of this room so you cant do this"})
+    except:
+        return jsonify({'message':'Problem in performing this opration'})
+
+
+@app.route('/admin',methods=["GET"])
+@token_required
+def admin(current_user):
+    data={}
+    data['public_id']=current_user.public_id
+    data['username']=current_user.useranme
+    data['email']=current_user.email
+    data['avatar_link']=current_user.avatar_link
+    if current_user.male ==True:
+        data['gender']='Male'
+    else:
+        data['gender']='Female'
+    data['message']="We dont keep anything secret from user that's why give every data about you."
+    return jsonify({'message':data})
+
+@app.route('/<room_id>')
+def get_room_info(room_id):
+    room_data=Rooms.query.filter_by(room_id=room_id).first()
+    data={}
+    data['room_name']=room_data.room_name
+    data['video_link']=room_data.video_link
+    data['room_id']=room_data.room_id
+    data['created_by']=room_data.created_by
+    return jsonify({"message":data})
+    
