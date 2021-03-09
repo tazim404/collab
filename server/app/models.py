@@ -15,9 +15,9 @@ class Users(db.Model):
 
 class Rooms(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    room_name = db.Column(db.String(50), unique=True)
+    room_name = db.Column(db.String(50), unique=False)
     video_link = db.Column(db.String(100), unique=False)
-    room_id = db.Column(db.String(50))
+    room_id = db.Column(db.String(50), unique=True)
     number_of_users = db.Column(db.Integer, nullable=True)
     created_by = db.Column(db.String(50), db.ForeignKey('users.public_id'))
 

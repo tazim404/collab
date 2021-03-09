@@ -4,7 +4,7 @@ import Main from "../components/Main.vue";
 import Login from "../components/auth/Login.vue";
 import Singup from "../components/auth/Singup.vue";
 import Profile from "../components/admin/Profile.vue";
-import Create from "../components/admin/Create.vue";
+
 Vue.use(VueRouter);
 function guardMyroute(to, from, next) {
   let isAuthenticated = false;
@@ -41,11 +41,6 @@ const routes = [
     name: "admin",
     component: Profile,
     beforeEnter: guardMyroute,
-  },
-  {
-    path: "/create",
-    name: "create",
-    component: Create,
   },
 ];
 
