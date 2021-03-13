@@ -14,7 +14,7 @@
                 <div class="box">
                   <figure class="avatar">
                     <img
-                      src="https://semantic-ui.com/images/avatar2/small/matthew.png"
+                      src="https://semantic-ui.com/images/avatar2/small/mark.png"
                     />
                   </figure>
                 </div>
@@ -28,6 +28,7 @@
                   >
                     {{ key }} <i class="arrow right"></i> {{ value }}
                   </li>
+                  <li>Room id <i class="arrow right"></i> {{ join.roomId }}</li>
                 </ul>
               </div>
 
@@ -52,6 +53,8 @@
                     Delete Room
                   </button>
                 </div>
+                <!-- All romm Cards -->
+                <!-- <room-card id="tazim" /> -->
               </div>
             </div>
           </div>
@@ -132,7 +135,7 @@
         </section>
         <footer class="modal-card-foot">
           <b-button
-            label="Create"
+            label="Join"
             type="is-success"
             outlined
             v-on:click="joinRoom"
@@ -171,7 +174,7 @@
         </section>
         <footer class="modal-card-foot">
           <b-button
-            label="Create"
+            label="Delete"
             type="is-success"
             outlined
             v-on:click="deleteRoom"
@@ -191,14 +194,14 @@
 </template>
 
 <script>
-// import Create from "./Create";
+// import RoomCard from "./RoomCard.vue";
+import axios from "axios";
 export default {
   name: "Profile",
-  components: {
-    // Create,
-  },
+  // components: { RoomCard },
   data() {
     return {
+      rooms: [],
       createRoomModal: false,
       joinRoomModal: false,
       deleteRoomModal: false,
@@ -220,23 +223,121 @@ export default {
         message:
           "We dont keep anything secret from user that's why we give every data about you.",
       },
-      avatar_url: "https://semantic-ui.com/images/avatar2/small/matthew.png",
+      avatar_url: "",
     };
   },
   methods: {
     createRoom() {
-      console.log(this.create.roomName);
-      console.log(this.create.videoLink);
+      const URL = "http://127.0.0.1:5000/create";
+      axios
+        .post(
+          URL,
+          {
+            room_name: this.create.roomName,
+            video_link: this.create.videoLink,
+          },
+          {
+            headers: {
+              "access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          this.join.roomId = res.data.room_id;
+          console.log(res.data.room_id);
+          this.createRoomModal = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     joinRoom() {
-      console.log(this.join.roomId);
+      this.$router.push({ path: `/${this.join.roomId}` });
     },
     deleteRoom() {
-      console.log("Room dlete");
+      const URL = "http://127.0.0.1:5000/delete";
+      axios
+        .post(
+          URL,
+          {
+            room_id: this.del.roomId,
+          },
+          {
+            headers: {
+              "access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
+  },
+  created() {
+    const URL = "http://127.0.0.1:5000/admin";
+    axios
+      .get(URL, { headers: { "access-token": localStorage.getItem("token") } })
+      .then((res) => {
+        console.log(res.data.message);
+        this.profile.username = res.data.message.username;
+        this.profile.email = res.data.message.email;
+        this.profile.public_id = res.data.message.public_id;
+        this.avatar_url = res.data.message.avatar_url;
+        this.avatar_url = res.data.message.avatar_url;
+        this.profile.gender = res.data.message.gender;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <style scoped>
 .login-hr {

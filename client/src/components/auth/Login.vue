@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Login",
   data() {
@@ -60,7 +61,18 @@ export default {
   },
   methods: {
     login() {
-      console.log(this.username, this.password);
+      const URL = "http://127.0.0.1:5000/login";
+      axios
+        .post(URL, { username: this.username, password: this.password })
+        .then((res) => {
+          let serverToken = res.data.token;
+          localStorage.setItem("token", serverToken);
+          localStorage.setItem("isAuthentictaed", true);
+          this.$router.push("admin");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

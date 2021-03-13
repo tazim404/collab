@@ -16,7 +16,14 @@
     </template>
 
     <template #end>
-      <b-navbar-item tag="div">
+      <b-navbar-item tag="div" v-if="signedIn()">
+        <div class="buttons">
+          <button class="button is-primary" v-on:click="logout">
+            <strong> Logout</strong>
+          </button>
+        </div>
+      </b-navbar-item>
+      <b-navbar-item tag="div" v-else>
         <!-- Buttons gropup -->
         <div class="buttons">
           <a v-for="(button, id) in navButtons" :key="id" :class="button.type">
@@ -26,17 +33,6 @@
               ></strong
             >
           </a>
-          <b-field>
-            <b-switch
-              :rounded="isRounded"
-              v-model="lightMode"
-              passive-type="is-dark "
-              type="is-warning"
-              v-on:input="change"
-            >
-              {{ lightMode ? "Light" : "Dark" }}
-            </b-switch>
-          </b-field>
         </div>
       </b-navbar-item>
     </template>
@@ -51,6 +47,7 @@ export default {
       isRounded: false,
       isOutlined: false,
       lightMode: false,
+      isAuthentictaed: localStorage.getItem("isAuthentictaed"),
       navItems: [
         {
           name: "Home",
@@ -69,7 +66,7 @@ export default {
         {
           name: "Login",
           link: "/login",
-          type: "button is-primary ",
+          type: "button is-primary",
         },
         {
           name: "SingUp",
@@ -82,6 +79,19 @@ export default {
   methods: {
     change() {
       console.log("Chnaged ");
+    },
+    logout() {
+      localStorage.removeItem("token");
+      // localStorage.getItem("isAuthentictaed");
+      localStorage.setItem("isAuthentictaed", false);
+      this.$router.push("login");
+    },
+    signedIn() {
+      if (localStorage.getItem("isAuthentictaed") == "true") {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
 };

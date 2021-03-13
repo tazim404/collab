@@ -11,30 +11,42 @@
               Please singup to proceed.
             </p>
             <b-field label="Username" type="is-primary">
-              <b-input type="text" v-model="username"> </b-input> </b-field
+              <b-input type="text" v-model="username" required>
+              </b-input> </b-field
             ><b-field label="Email" type="is-primary">
               <b-input
                 type="email"
                 aria-placeholder="eg.Jhon@mail.com"
                 v-model="email"
                 password-reveal
+                required
               >
               </b-input>
             </b-field>
+            <!-- {{ gender }} -->
             <b-field label="Password" type="is-primary">
               <b-input
                 type="password"
                 aria-placeholder="eg.Jhon@123"
                 v-model="password"
                 password-reveal
+                required
               >
               </b-input>
             </b-field>
+            <div class="block">
+              <b-radio v-model="gender" name="name" native-value="male">
+                Male
+              </b-radio>
+              <b-radio v-model="gender" name="name" native-value="female">
+                Female
+              </b-radio>
+            </div>
             <button
               class="button is-block is-success is-outlined is-large is-fullwidth"
               v-on:click="singup()"
             >
-              Login
+              Singup
             </button>
           </div>
         </div>
@@ -44,6 +56,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Login",
   data() {
@@ -51,12 +64,27 @@ export default {
       username: "",
       email: "",
       password: "",
+      gender: "male",
     };
   },
   methods: {
     singup() {
-      console.log(this.username, this.password, this.email);
-      console.log("Created acc");
+      const URL = "http://127.0.0.1:5000/singup";
+      axios
+        .post(URL, {
+          username: this.username,
+          password: this.password,
+          email: this.email,
+          gender: this.gender,
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            this.$router.push("login");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

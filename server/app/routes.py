@@ -1,5 +1,6 @@
-from app import app, db
+from app import app, db, socket
 from flask import request, jsonify, make_response
+from flask_socketio import join_room,leave_room
 from app.models import Users, Rooms
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -98,7 +99,7 @@ def create_room(current_user):
                  room_id=unique_id, created_by=current_user.public_id)
     db.session.add(room)
     db.session.commit()
-    return jsonify({"message": "New room craeted"})
+    return jsonify({"message": "New room craeted", "room_id": unique_id})
 
 
 @app.route('/delete', methods=["POST"])
@@ -137,9 +138,49 @@ def admin(current_user):
 @app.route('/<room_id>')
 def get_room_info(room_id):
     room_data = Rooms.query.filter_by(room_id=room_id).first()
+    if room_data==None:
+        return jsonify({'message':"No room found"}),404
+    print(room_data)
     data = {}
     data['room_name'] = room_data.room_name
     data['video_link'] = room_data.video_link
     data['room_id'] = room_data.room_id
     data['created_by'] = room_data.created_by
     return jsonify({"message": data})
+
+# Error handling
+@app.errorhandler(404)
+def error_404(e):
+    return jsonify({'Message':"No found"})
+
+
+
+# Socket mappings
+@socket.on('join')
+def join(data):
+    room=data['room_id']
+    join_room(room)
+    print(data['name']+ 'joinde the room')
+
+@socket.on('leave')
+def leave(data):
+    room=data['room']
+    leave_room(room)
+    print('Lefet the room')
+
+@socket.on('play')
+def play():
+    print("Played")
+
+
+@socket.on('pause')
+def pause():
+    print("Paused")
+
+@socket.on('message')
+def message(msg):
+    print(msg)
+
+@socket.on('slide')
+def slide_video(value):
+    print(value)

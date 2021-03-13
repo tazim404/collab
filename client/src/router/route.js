@@ -4,10 +4,12 @@ import Main from "../components/Main.vue";
 import Login from "../components/auth/Login.vue";
 import Singup from "../components/auth/Singup.vue";
 import Profile from "../components/admin/Profile.vue";
-
+import Collab from "../components/chat/Collab.vue";
 Vue.use(VueRouter);
 function guardMyroute(to, from, next) {
   let isAuthenticated = false;
+  console.log(to);
+  console.log(from);
   if (localStorage.getItem("token")) {
     isAuthenticated = true;
   } else {
@@ -40,6 +42,12 @@ const routes = [
     path: "/admin",
     name: "admin",
     component: Profile,
+    beforeEnter: guardMyroute,
+  },
+  {
+    path: "/:id",
+    name: "chat",
+    component: Collab,
     beforeEnter: guardMyroute,
   },
 ];
