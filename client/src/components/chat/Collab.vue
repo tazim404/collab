@@ -2,9 +2,19 @@
   <div>
     <div class="columns">
       <div class="column">
-        <Video :link="link" />
-        <button class="button is-medium" v-on:click="play">Play</button>
-        <button class="button is-medium" v-on:click="pause">Pause</button>
+        <div class="box">
+          <youtube
+            :video-id="videoId"
+            ref="youtube"
+            @playing="playing"
+          ></youtube>
+        </div>
+        <div class="box">
+          <button class="button is-medium" v-on:click="playVideo">Play</button>
+          <button class="button is-medium" v-on:click="pauseVideo">
+            Pause
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -12,18 +22,19 @@
 
 <script>
 import axios from "axios";
-import Video from "./Video.vue";
-import socket from "../../App.vue";
-// import { Socket } from 'socket.io-client';
+// import socket from "../../App.vue";
+// jSdj2pTH1Zg
 export default {
   name: "Collab",
-  components: { Video },
+
   data() {
     return {
+      videoId: "jSdj2pTH1Zg",
       id: "",
       URL: process.env.APP_URL,
       link: "",
       roomName: "",
+      playing: false,
     };
   },
 
@@ -40,19 +51,34 @@ export default {
         console.log(err);
       });
   },
-  mounted() {
-    socket.emit("play");
-  },
-  methods:{
-    play(){
-      console.log(socket.socket.emit)
-      socket.socket.emit('play')
+  sockets: {
+    user_played() {
+      this.play();
     },
-    pause(){
-      console.log(socket.socket.emit('pause'))
-      console.log(socket.socket.id)
-    }
-  }
+    user_paused() {
+      this.pause();
+    },
+  },
+  methods: {
+    pause() {
+      this.player.pauseVideo();
+    },
+    play() {
+      this.player.playVideo();
+    },
+    playVideo() {
+      // socket.socket.emit("play", { room: this.id });
+      this.$socket.client.emit("play", { room: this.id });
+    },
+    pauseVideo() {
+      this.$socket.client.emit("pause", { room: this.id });
+    },
+  },
+
+  computed: {
+    player() {
+      return this.$refs.youtube.player;
+    },
+  },
 };
 </script>
-

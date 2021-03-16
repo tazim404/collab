@@ -194,11 +194,10 @@
 </template>
 
 <script>
-// import RoomCard from "./RoomCard.vue";
+// import socket from "../../App.vue";
 import axios from "axios";
 export default {
   name: "Profile",
-  // components: { RoomCard },
   data() {
     return {
       rooms: [],
@@ -253,6 +252,14 @@ export default {
         });
     },
     joinRoom() {
+      // socket.socket.emit("join", {
+      //   username: this.profile.username,
+      //   room: this.join.roomId,
+      // });
+      this.$socket.client.emit("join", {
+        username: this.profile.username,
+        room: this.join.roomId,
+      });
       this.$router.push({ path: `/${this.join.roomId}` });
     },
     deleteRoom() {
@@ -287,7 +294,6 @@ export default {
         this.profile.email = res.data.message.email;
         this.profile.public_id = res.data.message.public_id;
         this.avatar_url = res.data.message.avatar_url;
-        this.avatar_url = res.data.message.avatar_url;
         this.profile.gender = res.data.message.gender;
       })
       .catch((err) => {
@@ -296,48 +302,6 @@ export default {
   },
 };
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <style scoped>
 .login-hr {

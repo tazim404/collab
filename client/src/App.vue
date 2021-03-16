@@ -9,18 +9,15 @@
 <script>
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
-import io from "socket.io-client";
-var socket=io.connect("http://127.0.0.1:5000")
+// import io from "socket.io-client";
+// var socket = io.connect("http://127.0.0.1:5000");
+// socket
 export default {
   name: "App",
-  socket,
   components: {
     Navbar,
     Footer,
   },
-  created(){
-    socket.emit('play')
-  }
 };
 </script>
 

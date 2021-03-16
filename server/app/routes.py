@@ -1,6 +1,6 @@
 from app import app, db, socket
 from flask import request, jsonify, make_response
-from flask_socketio import join_room,leave_room
+from flask_socketio import join_room, leave_room, emit, send
 from app.models import Users, Rooms
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -138,8 +138,8 @@ def admin(current_user):
 @app.route('/<room_id>')
 def get_room_info(room_id):
     room_data = Rooms.query.filter_by(room_id=room_id).first()
-    if room_data==None:
-        return jsonify({'message':"No room found"}),404
+    if room_data == None:
+        return jsonify({'message': "No room found"}), 404
     print(room_data)
     data = {}
     data['room_name'] = room_data.room_name
@@ -149,37 +149,52 @@ def get_room_info(room_id):
     return jsonify({"message": data})
 
 # Error handling
+
+
 @app.errorhandler(404)
 def error_404(e):
-    return jsonify({'Message':"No found"})
-
+    return jsonify({'Message': "Not found"})
 
 
 # Socket mappings
 @socket.on('join')
 def join(data):
-    room=data['room_id']
+    room = data['room']
+    username = data['username']
     join_room(room)
-    print(data['name']+ 'joinde the room')
+    print(f'{username} has joined the room {room}')
+    emit('user_joined', room=room, broadcast=True)
+
 
 @socket.on('leave')
 def leave(data):
-    room=data['room']
+    room = data['room']
+    username = data['username']
     leave_room(room)
-    print('Lefet the room')
+    print(f'{username} has left the room {room}')
+    emit('user_left', room=room, broadcast=True)
+
 
 @socket.on('play')
-def play():
+def play(data):
     print("Played")
+    print(data)
+    room = data['room']
+    print(f'Room is paused')
+    emit('user_played', room=room, broadcast=True)
 
 
 @socket.on('pause')
-def pause():
+def pause(data):
     print("Paused")
+    room = data['room']
+    emit('user_paused', room=room, brodcast=True)
+
 
 @socket.on('message')
 def message(msg):
     print(msg)
+
 
 @socket.on('slide')
 def slide_video(value):

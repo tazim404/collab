@@ -11,10 +11,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 
 
-# Socket 
-socket=SocketIO(app,cors_allowed_origins="*")
-cors=CORS(app)
+# Socket
+socket = SocketIO(app, cors_allowed_origins="*")
+cors = CORS(app)
 db = SQLAlchemy(app)
-
-
 from app.routes import *
