@@ -13,7 +13,15 @@
         <section class="hero is-medium">
           <div class="hero-body">
             <h1 class="title is-size-2">{{ title }}</h1>
+            <hr />
             <p class="subtitle is-size-4">{{ description }}</p>
+            <div class="content">
+              <ul>
+                <li class="title is-5" v-for="step in steps" :key="step">
+                  {{ step }}
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
       </div>
@@ -26,10 +34,16 @@ export default {
   name: "About",
   data() {
     return {
-      title: "About ",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab placeat dicta natus minima repudiandae.Hello world my name is Tazim Rahbar and hello this is dummy text",
+      title: "How to use",
+      description: "",
       cta: "Be the part",
+      steps: [
+        "Singup(If dosen't have an account)",
+        "Login (If you have an account)",
+        "# You will land to admin page",
+        "Create Room by putting romm name and only youtube video id or Join Room by putting room id",
+        "Delete room if you dont want it anymore only if you are the creator of that room",
+      ],
       ctaLink: "",
       ctaType: "button is-success is-outlined is-medium",
       imageUrl: require("../../assets/about.svg"),

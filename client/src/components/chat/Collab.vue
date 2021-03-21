@@ -1,5 +1,14 @@
 <template>
   <div>
+    <Alert :msg="msg" :button_event="hideAlert" v-if="showAlert" />
+    <div class="columns">
+      <div class="column is-four-fifths"></div>
+      <div class="column">
+        <button class="button is-primary is-outlined" v-on:click="leaveRoom">
+          Leave Room
+        </button>
+      </div>
+    </div>
     <div class="columns">
       <div class="column">
         <div class="box">
@@ -16,28 +25,35 @@
           </button>
         </div>
       </div>
+      <div class="column">
+        <div class="box">
+          <Chat />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-// import socket from "../../App.vue";
-// jSdj2pTH1Zg
+import Chat from "./Chat.vue";
+import Alert from "../Alert";
 export default {
   name: "Collab",
-
+  show_delete_alert: false,
+  show_room_not_found_alert: false,
+  components: { Chat, Alert },
   data() {
     return {
-      videoId: "jSdj2pTH1Zg",
+      videoId: "",
       id: "",
       URL: process.env.APP_URL,
       link: "",
       roomName: "",
-      playing: false,
+      showAlert: false,
+      msg: "",
     };
   },
-
   created() {
     let link = document.URL.split("/");
     this.id = link[link.length - 1];
@@ -45,9 +61,17 @@ export default {
     axios
       .get(URL)
       .then((res) => {
-        console.log(res.data.message);
+        if (res.status == 200) {
+          this.videoId = res.data.message.video_link;
+        } else {
+          this.showAlert = true;
+          this.msg = "There is an error";
+          console.log("There is an error");
+        }
       })
       .catch((err) => {
+        this.showAlert = true;
+        this.msg = "I think room  id wrong go back and enter valid room id";
         console.log(err);
       });
   },
@@ -58,6 +82,10 @@ export default {
     user_paused() {
       this.pause();
     },
+    admin_deleted_the_room() {
+      this.$router.push("admin");
+      this.$socket.client.emit("ok", { room_id: this.id });
+    },
   },
   methods: {
     pause() {
@@ -67,11 +95,21 @@ export default {
       this.player.playVideo();
     },
     playVideo() {
-      // socket.socket.emit("play", { room: this.id });
       this.$socket.client.emit("play", { room: this.id });
     },
     pauseVideo() {
       this.$socket.client.emit("pause", { room: this.id });
+    },
+    hideAlert() {
+      this.showAlert = false;
+    },
+    leaveRoom() {
+      this.$socket.client.emit("leave", {
+        room: this.id,
+        username: sessionStorage.getItem("username"),
+      });
+      sessionStorage.removeItem("username");
+      this.$router.push("admin");
     },
   },
 

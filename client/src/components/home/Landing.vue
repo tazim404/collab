@@ -6,7 +6,9 @@
           <div class="hero-body">
             <h1 class="title is-size-2">{{ title }}</h1>
             <p class="subtitle is-size-4">{{ description }}</p>
-            <button :class="ctaType">{{ cta }}</button>
+            <router-link :to="ctaLink">
+              <button :class="ctaType">{{ cta }}</button></router-link
+            >
           </div>
         </section>
       </div>
@@ -25,11 +27,11 @@ export default {
   name: "Landing",
   data() {
     return {
-      title: "Collab Playback",
+      title: "Collab Play",
       description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab placeat dicta natus minima repudiandae.Hello world my name is Tazim Rahbar and hello this is dummy text",
+        "Welcome to collab paly.A place where you can collaboratively watch youtube videos. The suggested number of people in the room is 2 but you can go with more users also. If you want to know how to use this product please scroll down a little bit and you will find a walkthrough",
       cta: "Be the part",
-      ctaLink: "",
+      ctaLink: "admin",
       ctaType: "button is-success is-outlined is-medium",
       imageUrl: require("../../assets/home.svg"),
     };

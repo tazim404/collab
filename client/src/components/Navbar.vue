@@ -3,7 +3,7 @@
     <template #brand>
       <b-navbar-item>
         <a href="/">
-          <img src="../assets/logo.png" alt="Brand Logo" />
+          <img src="../assets/collab.png" alt="Brand Logo" />
         </a>
       </b-navbar-item>
     </template>
@@ -41,6 +41,7 @@
 
 <script>
 export default {
+  template: "<Navbar/>",
   name: "Navbar",
   data() {
     return {
@@ -77,17 +78,14 @@ export default {
     };
   },
   methods: {
-    change() {
-      console.log("Chnaged ");
-    },
+    change() {},
     logout() {
       localStorage.removeItem("token");
-      // localStorage.getItem("isAuthentictaed");
       localStorage.setItem("isAuthentictaed", false);
       this.$router.push("login");
     },
     signedIn() {
-      if (localStorage.getItem("isAuthentictaed") == "true") {
+      if (localStorage.getItem("isAuthentictaed") === "true") {
         return true;
       } else {
         return false;

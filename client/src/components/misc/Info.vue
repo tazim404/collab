@@ -5,10 +5,7 @@
       <article class="media">
         <div class="media-left">
           <figure class="image is-64x64">
-            <img
-              src="https://bulma.io/images/placeholders/128x128.png"
-              alt="Image"
-            />
+            <img :src="image" alt="Image" />
           </figure>
         </div>
         <div class="media-content">
@@ -21,25 +18,6 @@
               {{ description }}.
             </p>
           </div>
-          <nav class="level is-mobile">
-            <div class="level-left">
-              <a
-                class="level-item"
-                v-for="(social, id) in socials"
-                :key="id"
-                :href="social.link"
-                target="_blank"
-              >
-                <span class="icon is-small"
-                  ><b-icon
-                    pack="fab"
-                    :icon="social.icon"
-                    size="is-medium"
-                  ></b-icon>
-                </span>
-              </a>
-            </div>
-          </nav>
         </div>
       </article>
     </div>
@@ -54,7 +32,7 @@ export default {
       name: "Collab Playback",
       email: "collab@gmail.com",
       mailLink: "mailto:collab@gmail.com",
-      image: require("../../assets/logo.png"),
+      image: require("../../assets/collab.png"),
       socials: [
         {
           name: "Twitter",

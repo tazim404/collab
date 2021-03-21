@@ -1,6 +1,6 @@
 from app import app, db, socket
 from flask import request, jsonify, make_response
-from flask_socketio import join_room, leave_room, emit, send
+from flask_socketio import join_room, leave_room, emit, send, close_room
 from app.models import Users, Rooms
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -78,13 +78,13 @@ def login():
         return make_response("Could not verify", 401, {'WWW-Authenticate': 'Basic Realam="Login Required"'})
     user = Users.query.filter_by(username=data['username']).first()
     if not user:
-        return jsonify({'message': "No user found"})
+        return jsonify({'message': "No user found"}), 401
     if check_password_hash(user.password, data['password']):
         token = jwt.encode({'public_id': user.public_id},
                            app.config['SECRET_KEY'], algorithm='HS256')
-        return jsonify({'token': token})
+        return jsonify({'token': token}), 200
     else:
-        return jsonify({'message': "Wrong credentials"})
+        return jsonify({'message': "Wrong credentials"}), 401
 
 
 @app.route('/create', methods=["POST"])
@@ -110,13 +110,17 @@ def delete_room(current_user):
         data = request.get_json()
         room = Rooms.query.filter_by(room_id=data['room_id']).first()
         if room.created_by == current_user.public_id:
+            room_id = room.room_id
+            socket.emit('admin_deleted_the_room', room=room_id,
+                        brodcast=True)
             db.session.delete(room)
             db.session.commit()
-            return jsonify({'message': "Deleted the room"})
+            return jsonify({'message': "Deleted the room"}), 200
         else:
-            return jsonify({'message': "YOu are not the creator of this room so you cant do this"})
-    except:
-        return jsonify({'message': 'Problem in performing this opration'})
+            return jsonify({'message': "YOu are not the creator of this room so you cant do this"}), 205
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Problem in performing this opration'}), 400
 
 
 @app.route('/admin', methods=["GET"])
@@ -126,7 +130,7 @@ def admin(current_user):
     data['public_id'] = current_user.public_id
     data['username'] = current_user.username
     data['email'] = current_user.email
-    data['avatar_link'] = current_user.avatar_link
+    data['image'] = current_user.avatar_link
     if current_user.male == True:
         data['gender'] = 'Male'
     else:
@@ -138,7 +142,7 @@ def admin(current_user):
 @app.route('/<room_id>')
 def get_room_info(room_id):
     room_data = Rooms.query.filter_by(room_id=room_id).first()
-    if room_data == None:
+    if not room_data:
         return jsonify({'message': "No room found"}), 404
     print(room_data)
     data = {}
@@ -171,8 +175,8 @@ def leave(data):
     room = data['room']
     username = data['username']
     leave_room(room)
-    print(f'{username} has left the room {room}')
-    emit('user_left', room=room, broadcast=True)
+    emit('notification', {
+         message: f'{username} has left the room'}, room=room, brodcast=True)
 
 
 @socket.on('play')
@@ -191,11 +195,29 @@ def pause(data):
     emit('user_paused', room=room, brodcast=True)
 
 
-@socket.on('message')
-def message(msg):
-    print(msg)
+@socket.on('msg')
+def message(data):
+    room = data['room']
+    msg = data['message']
+    print(room, msg)
+    emit('incoming_message', {'message': msg}, room=room, brodcast=True)
+
+
+@socket.on('notification')
+def notify(data):
+    room = data['room']
+    notification_meeesage = data['notification_meeesage']
+    emit('notify_message', {
+         'notification_meeesage': notification_meeesage}, room=room, brodcast=True)
+
+
+@socket.on('ok')
+def ready_to_close_room(data):
+    room = data['room_id']
+    close_room(room=room)
 
 
 @socket.on('slide')
 def slide_video(value):
     print(value)
+    emit('test', {'name': 'tazim'})

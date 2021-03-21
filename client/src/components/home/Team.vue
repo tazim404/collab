@@ -9,11 +9,7 @@
         <!-- Card ende -->
         <div class="box">
           <article class="media">
-            <div class="media-left">
-              <figure class="image is-64x64">
-                <img :src="team.image" alt="Image" />
-              </figure>
-            </div>
+            <div class="media-left"></div>
             <div class="media-content">
               <div class="content">
                 <p>
@@ -98,7 +94,6 @@ export default {
           name: "Tazim Rahbar",
           designation: "Founder/Creator",
           description: "",
-          image: "https://bulma.io/images/placeholders/128x128.png",
           github: "https://github.com/tazim404",
           instagram: "https://instgram.com/tazim_rahbar",
           twitter: "https://twitter.com/tazim_rahbar",
@@ -108,7 +103,6 @@ export default {
         {
           name: "?",
           designation: "?",
-          image: "https://bulma.io/images/placeholders/128x128.png",
           github: "?",
           instagram: "?",
           twitter: "?",

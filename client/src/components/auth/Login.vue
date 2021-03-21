@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Alert :msg="msg" v-if="showAlert" />
     <div class="columns">
       <div class="column is-one-third"></div>
       <div class="column is-one-third">
@@ -37,10 +38,14 @@
 
 <script>
 import axios from "axios";
+import Alert from "../Alert.vue";
 export default {
   name: "Login",
+  components: { Alert },
   data() {
     return {
+      showAlert: false,
+      msg: "",
       formFields: [
         {
           name: "Username",
@@ -65,13 +70,17 @@ export default {
       axios
         .post(URL, { username: this.username, password: this.password })
         .then((res) => {
-          let serverToken = res.data.token;
-          localStorage.setItem("token", serverToken);
-          localStorage.setItem("isAuthentictaed", true);
-          this.$router.push("admin");
+          if (res.status === 200) {
+            let serverToken = res.data.token;
+            localStorage.setItem("token", serverToken);
+            localStorage.setItem("isAuthentictaed", true);
+            this.$router.push("admin");
+          }
         })
         .catch((err) => {
           console.log(err);
+          this.showAlert = true;
+          this.msg = "I think you have entered wrong credentials";
         });
     },
   },

@@ -1,6 +1,7 @@
 <template>
   <!-- Main Div -->
   <div>
+    <Alert :msg="msg" v-if="showAlert" />
     <div class="card">
       <div class="columns">
         <div class="column is-one-third"></div>
@@ -13,9 +14,7 @@
               <div class="container has-text-centered">
                 <div class="box">
                   <figure class="avatar">
-                    <img
-                      src="https://semantic-ui.com/images/avatar2/small/mark.png"
-                    />
+                    <img v-bind:src="profile.image" />
                   </figure>
                 </div>
               </div>
@@ -194,16 +193,19 @@
 </template>
 
 <script>
-// import socket from "../../App.vue";
 import axios from "axios";
+import Alert from "../Alert.vue";
 export default {
   name: "Profile",
+  components: {
+    Alert,
+  },
   data() {
     return {
-      rooms: [],
       createRoomModal: false,
       joinRoomModal: false,
       deleteRoomModal: false,
+      showAlert: false,
       create: {
         roomName: "",
         videoLink: "",
@@ -215,14 +217,16 @@ export default {
         roomId: "",
       },
       profile: {
-        username: "Jhon Doe",
-        email: "jhon@maile.com",
-        gender: "Male",
-        public_id: "4f56fa3",
+        username: "",
+        email: "",
+        gender: "",
+        public_id: "",
         message:
           "We dont keep anything secret from user that's why we give every data about you.",
+        image: "",
       },
-      avatar_url: "",
+
+      msg: "",
     };
   },
   methods: {
@@ -243,23 +247,24 @@ export default {
         )
         .then((res) => {
           console.log(res);
-          this.join.roomId = res.data.room_id;
-          console.log(res.data.room_id);
-          this.createRoomModal = false;
+          if (res.status == 200) {
+            this.join.roomId = res.data.room_id;
+            console.log(res.data.room_id);
+            this.createRoomModal = false;
+            this.showAlert = true;
+            this.msg = "Created Room now join to have fun";
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
     joinRoom() {
-      // socket.socket.emit("join", {
-      //   username: this.profile.username,
-      //   room: this.join.roomId,
-      // });
       this.$socket.client.emit("join", {
         username: this.profile.username,
         room: this.join.roomId,
       });
+      sessionStorage.setItem("username", this.profile.username);
       this.$router.push({ path: `/${this.join.roomId}` });
     },
     deleteRoom() {
@@ -278,6 +283,17 @@ export default {
         )
         .then((res) => {
           console.log(res);
+          if (res.status == 200) {
+            this.deleteRoomModal = false;
+            this.showAlert = true;
+            this.msg = "Delted Room";
+            this.$socket.client.emit("admin_deleted");
+          } else {
+            this.showAlert = true;
+            this.msg =
+              "Cant deleted the room because you are not the creator of this room";
+            this.deleteRoomModal = false;
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -293,7 +309,7 @@ export default {
         this.profile.username = res.data.message.username;
         this.profile.email = res.data.message.email;
         this.profile.public_id = res.data.message.public_id;
-        this.avatar_url = res.data.message.avatar_url;
+        this.profile.image = res.data.message.image;
         this.profile.gender = res.data.message.gender;
       })
       .catch((err) => {

@@ -21,7 +21,6 @@ import Contact from "../components/misc/Contact.vue";
 export default {
   name: "Footer",
   components: {
-    // Sitemap,
     Info,
     Contact,
   },

@@ -5,6 +5,7 @@ import Login from "../components/auth/Login.vue";
 import Singup from "../components/auth/Singup.vue";
 import Profile from "../components/admin/Profile.vue";
 import Collab from "../components/chat/Collab.vue";
+import Chat from "../components/chat/Chat.vue";
 Vue.use(VueRouter);
 function guardMyroute(to, from, next) {
   let isAuthenticated = false;
@@ -43,6 +44,11 @@ const routes = [
     name: "admin",
     component: Profile,
     beforeEnter: guardMyroute,
+  },
+  {
+    path: "/tazim",
+    name: "chatting",
+    component: Chat,
   },
   {
     path: "/:id",
