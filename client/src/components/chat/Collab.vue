@@ -40,8 +40,6 @@ import Chat from "./Chat.vue";
 import Alert from "../Alert";
 export default {
   name: "Collab",
-  show_delete_alert: false,
-  show_room_not_found_alert: false,
   components: { Chat, Alert },
   data() {
     return {
@@ -85,6 +83,9 @@ export default {
     admin_deleted_the_room() {
       this.$router.push("admin");
       this.$socket.client.emit("ok", { room_id: this.id });
+    },
+    notification() {
+      console.log("There is notification");
     },
   },
   methods: {

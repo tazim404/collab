@@ -1,8 +1,17 @@
 <template>
   <div class="chat">
     <div class="messaging">
-      <Message v-for="(message, id) in messages" :key="id" :msg="message" />
-      <Notification msg="Some the room" />
+      <Notification
+        v-for="(notification, id) in notifications"
+        :key="id"
+        :msg="notification"
+      />
+      <Message
+        v-for="message in messages"
+        :key="message.message"
+        :msg="message.message"
+        :sender="message.sender"
+      />
     </div>
     <!-- Sending Forms -->
     <div class="field has-addons is-justify-content-center mb-2">
@@ -26,19 +35,24 @@ import Message from "./Message.vue";
 import Notification from "./Notification.vue";
 export default {
   name: "Chat",
-  components: { Message, Notification },
+  components: {
+    Message,
+    Notification,
+  },
   data() {
     return {
       room_id: "",
       message_to_send: "",
       messages: [],
-      notifications: [],
+      notifications: ["Welcome"],
     };
   },
   sockets: {
     incoming_message(data) {
       console.log(data);
-      this.messages.push(data.message);
+      this.messages.push({ message: data.msg, sender: data.sender });
+      // this.messages.push(data.message);
+      console.log(this.messages);
     },
     notification(data) {
       console.log(data);
@@ -49,6 +63,7 @@ export default {
     send() {
       console.log(this.message_to_send);
       this.$socket.client.emit("msg", {
+        sender: sessionStorage.getItem("username"),
         message: this.message_to_send,
         room: this.room_id,
       });
@@ -89,7 +104,7 @@ export default {
   margin: 5px;
   border-radius: 6px;
   color: black;
-  /* float: inline-end; */
-  float: inherit;
+  float: inline-end;
+  /* float: inherit; */
 }
 </style>

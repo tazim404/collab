@@ -167,7 +167,9 @@ def join(data):
     username = data['username']
     join_room(room)
     print(f'{username} has joined the room {room}')
-    emit('user_joined', room=room, broadcast=True)
+    # emit('user_joined', room=room, broadcast=True)
+    emit('notification', {
+         "message": f'{username} joined the room'}, room=room, brodcast=True)
 
 
 @socket.on('leave')
@@ -175,8 +177,9 @@ def leave(data):
     room = data['room']
     username = data['username']
     leave_room(room)
+    print("Hello world my name is Tazim Rahbar")
     emit('notification', {
-         message: f'{username} has left the room'}, room=room, brodcast=True)
+         "message": f'{username} has left the room'}, room=room, brodcast=True)
 
 
 @socket.on('play')
@@ -198,17 +201,19 @@ def pause(data):
 @socket.on('msg')
 def message(data):
     room = data['room']
+    sender = data['sender']
     msg = data['message']
-    print(room, msg)
-    emit('incoming_message', {'message': msg}, room=room, brodcast=True)
+    print(room, msg, sender)
+    emit('incoming_message', {'msg': msg,
+                              'sender': sender}, room=room, brodcast=True)
 
 
-@socket.on('notification')
-def notify(data):
-    room = data['room']
-    notification_meeesage = data['notification_meeesage']
-    emit('notify_message', {
-         'notification_meeesage': notification_meeesage}, room=room, brodcast=True)
+# @socket.on('notification')
+# def notify(data):
+#     room = data['room']
+#     notification_meeesage = data['notification_meeesage']
+#     emit('notify_message', {
+#          'notification_meeesage': notification_meeesage}, room=room, brodcast=True)
 
 
 @socket.on('ok')
