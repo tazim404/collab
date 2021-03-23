@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       name: "Collab Playback",
-      email: "collab@gmail.com",
-      mailLink: "mailto:collab@gmail.com",
+      email: "vuecollabplay@gmail.com",
+      mailLink: "mailto:vuecollabplay@gmail.com",
       image: require("../../assets/collab.png"),
       socials: [
         {

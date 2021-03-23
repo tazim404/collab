@@ -268,7 +268,7 @@ export default {
       this.$router.push({ path: `/${this.join.roomId}` });
     },
     deleteRoom() {
-      const URL = "http://127.0.0.1:5000/delete";
+      const URL ="http://127.0.0.1:5000/delete";
       axios
         .post(
           URL,

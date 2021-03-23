@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     singup() {
-      const URL = "http://127.0.0.1:5000/singup";
+      const URL = 'http://127.0.0.1:5000/singup';
       axios
         .post(URL, {
           username: this.username,
