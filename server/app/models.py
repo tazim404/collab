@@ -22,6 +22,4 @@ class Rooms(db.Model):
     created_by = db.Column(db.String(50), db.ForeignKey('users.public_id'))
 
 
-# class UsersRooms(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     room_id =
+

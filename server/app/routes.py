@@ -207,7 +207,7 @@ def message(data):
     emit('incoming_message', {'msg': msg,
                               'sender': sender}, room=room, brodcast=True)
 
-
+# NOTE:For future use
 # @socket.on('notification')
 # def notify(data):
 #     room = data['room']

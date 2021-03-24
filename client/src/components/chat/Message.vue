@@ -3,7 +3,7 @@
     <div class="receive_message is-size-6 has-text-left">
       <span class="user_name">{{ sender }}</span>
       {{ msg }}
-      <span class="time">9:48 PM</span>
+      <span class="time">{{new Date().toLocaleTimeString()}}</span>
     </div>
   </div>
 </template>

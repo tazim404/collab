@@ -1,6 +1,5 @@
 <template>
   <div id="teams" class="box">
-    <!-- <Divider color="red" size="is-4" width="50%" title="Developers" /> -->
     <hr color="#fc0000" width="100%" height="100%" />
     <h1 class="title is-2 has-text-centered">Developers</h1>
 

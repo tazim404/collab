@@ -9,8 +9,7 @@ print(os.environ.get('DATABASE_URI'))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 db_path=os.path.join(os.getcwd(),'data.db')
-# print("HEllo world",db_path)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////{db_path}'
 
 

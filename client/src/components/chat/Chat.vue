@@ -51,7 +51,6 @@ export default {
     incoming_message(data) {
       console.log(data);
       this.messages.push({ message: data.msg, sender: data.sender });
-      // this.messages.push(data.message);
       console.log(this.messages);
     },
     notification(data) {
@@ -105,6 +104,5 @@ export default {
   border-radius: 6px;
   color: black;
   float: inline-end;
-  /* float: inherit; */
 }
 </style>
